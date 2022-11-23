@@ -1,5 +1,5 @@
 import socket
-import utils
+import ClientServerClassUtils
 
 class Client :
     def __init__(self, port:int = 0, addr:str = None):
