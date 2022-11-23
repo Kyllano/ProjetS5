@@ -2,23 +2,26 @@ import ClientServerClass
 import sys
 import UserUtils
 from cryptography.hazmat.primitives import hashes
+import string
 
 users = []
 
 
 users = UserUtils.importUsers("passwd.txt")
 
+UserUtils.removeUser("prout", users)
+
 for i in users :
     if isinstance(i, UserUtils.User) :
         print(i.name, i.passwordHash, i.passwordSalt)
 
-
-
+print(UserUtils.checkPasswordUser("root", UserUtils.findUser("root", users)))
 
 
 
 
 """
+UserUtils.changePassword("Gus", "POLLOS BROTHA", users)
 users.append(UserUtils.User("root", "root", False))
 users.append(UserUtils.User("Mr.White", "myPass", False))
 users.append(UserUtils.User("Jessy", "IHaveANiceAss", False))
