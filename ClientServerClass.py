@@ -10,7 +10,7 @@ class Client :
 
     #Permet de se connecter a un server
     def connect(self) :
-        if (self.port != None and utils.checkValidIpAddress(self.addr) ) :
+        if (self.port != None and ClientServerClassUtils.checkValidIpAddress(self.addr) ) :
             self.sock.connect((self.addr, self.port))
         else :
             print("[CLIENT] Connexion impossible, le numéro de port ou ")
@@ -89,7 +89,7 @@ class Server :
 
     #Permet de lancer le serveur
     def start(self) :
-        if (utils.checkValidPort(self.port)) :
+        if (ClientServerClassUtils.checkValidPort(self.port)) :
             try :
                 self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
