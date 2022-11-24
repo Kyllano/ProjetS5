@@ -1,31 +1,37 @@
 import ClientServerClass
 import sys
+import UserUtils
+from cryptography.hazmat.primitives import hashes
+import string
+
+users = []
 
 
-if __name__ == "main" :
-    """
-    myClient = ClientServerClass.Client()
-    myClient.addr = "127.0.0.1"
-    myClient.port = 22222
+users = UserUtils.importUsers("passwd.txt")
 
-    myClient.connect()
-    #myClient.sendFile("./utils.py")
-    retour = myClient.receiveAll()
-    print("[CLIENT] J'ai recu tout mes machins! Mon retour :",retour)
+UserUtils.removeUser("prout", users)
 
-    myClient.closeConnection()
-    """
+for i in users :
+    if isinstance(i, UserUtils.User) :
+        print(i.name, i.passwordHash, i.passwordSalt)
 
-    myServer = ClientServerClass.Server()
-    myServer.port = 22222
-    conn, addr = myServer.start()
+print(UserUtils.checkPasswordUser("root", UserUtils.findUser("root", users)))
 
-    if (conn != None) :
-        print("connection etablie ! Client est :")
-        print(addr)
-    else :
-        print("erreur :(")
-        sys.exit(1)
 
-    myServer.sendString(conn, "Coucou!\n")
-    myServer.closeConnection(conn)
+
+
+"""
+UserUtils.changePassword("Gus", "POLLOS BROTHA", users)
+users.append(UserUtils.User("root", "root", False))
+users.append(UserUtils.User("Mr.White", "myPass", False))
+users.append(UserUtils.User("Jessy", "IHaveANiceAss", False))
+users.append(UserUtils.User("Skyler", "i) [•¡¤¦§¨©ª«¬-®¯±²³¶¹º»¼½¾¿‡•…‪‰‹›⁠⁰€™■･�]", False))
+
+UserUtils.exportUsers(users, "passwd.txt")
+"""
+
+"""
+passwd = root.password.finalize()
+print(passwd)
+print(passwd.hex())
+"""
