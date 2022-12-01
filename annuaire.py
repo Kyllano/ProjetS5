@@ -1,19 +1,28 @@
 import UserUtils
-from os import *
+import os 
 
-def creerUser(): 
-	
+from pathlib import Path 
+
+
+def creerUser(userList : list , password : str , nom : str): 
+
+	UserUtils.addUser(nom,password,userList)
+
+	user = UserUtils.findUser(nom,userList)
+
+	creerFichierAnuaire(user , ".")
 
 #La fonction doit pouvoir créer un fichier annuire. Ce dernier ne doit pas déjà exister 
 #La création de l'annuaire se faire grace au nom de l'utilisateur qui est créer
-def creerFichierAnuaire(): 
+def creerFichierAnuaire(user : UserUtils , pathFich : str): 
 
-	pathFichier = path(NomUtilisteur).absolute()	#"Calcul" du chemin d'accès au fichier
 
-	Utilisateur = UserUtils.User()
-	NomUtilisteur = Utilisateur.getNameUser()
+	NomUtilisteur = user.name
 
-	if (os.path.exists(pathFichier + NomUtilisteur + ".txt")) : 
+	pathFichier = Path(user.name).absolute()	#"Calcul" du chemin d'accès au fichier
+
+
+	if (os.path.exists(pathFich + "/" + NomUtilisteur + ".txt")) : 
 		return 81 #Utilisateur existe déjà
 	else :
 	#on prend le nomde l'utilisateur x : Yon.txt sera l'annuaire de l'utilisateur 'Yon' et on crée le fichier
