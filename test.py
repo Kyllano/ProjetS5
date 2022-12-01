@@ -1,9 +1,12 @@
 import ClientServerClass
 import sys
 import UserUtils
-from cryptography.hazmat.primitives import hashes
+#from cryptography.hazmat.primitives import hashes
 import string
+import annuaire
 
+
+"""
 users = []
 
 
@@ -17,6 +20,7 @@ for i in users :
 
 print(UserUtils.checkPasswordUser("root", UserUtils.findUser("root", users)))
 
+"""
 
 
 
@@ -35,3 +39,6 @@ passwd = root.password.finalize()
 print(passwd)
 print(passwd.hex())
 """
+
+
+annuaire.creerFichierAnuaire()

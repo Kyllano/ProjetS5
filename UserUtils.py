@@ -1,4 +1,4 @@
-from cryptography.hazmat.primitives import hashes
+#from cryptography.hazmat.primitives import hashes
 import random
 import string
 
@@ -50,6 +50,15 @@ def exportUsers(userList : list, filename : str) :
             file.write(user.name + ":" + user.passwordHash + ":" + user.passwordSalt + "\n")
     file.close()
     return nbUser
+
+
+#Fonction qui permet de retourner le nom de l'utilisateur 
+#retourne le nom de l'utilisateur 
+def getNameUser(name : str) : 
+    if isinstance(user, User) :
+        return user.name
+
+
 
 #Permet d'importer une liste d'utilisateurs dans un fichier de nom filename
 #-1 = erreur d'ouverture de fichier
