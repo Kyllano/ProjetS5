@@ -1,14 +1,24 @@
 import ClientServerClass
 import sys
 import UserUtils
-#from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import hashes
 import string
-import annuaire
+import AnnuaireUtils
+
+
+users = []
+
+#test sur l'annuaire pour créer un utilisateur et donc un annuaire
+AnnuaireUtils.creerUser(users, "Yon" , "1234")
+AnnuaireUtils.creerUser(users, "Pi p", "3.14159265359")
+
+#test pour modifier un annuaire
+AnnuaireUtils.modifAnnuaire(users , "Yon" , "1234" , "./users")
+#test pour modifier un annuaire mais mauvais mdp
+AnnuaireUtils.modifAnnuaire(users, "Pi p", "3,14" , "./users")
 
 
 """
-users = []
-
 
 users = UserUtils.importUsers("passwd.txt")
 
@@ -39,6 +49,3 @@ passwd = root.password.finalize()
 print(passwd)
 print(passwd.hex())
 """
-
-
-annuaire.creerFichierAnuaire()
