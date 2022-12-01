@@ -26,7 +26,7 @@ pubKey = RSAUtils.publicBytesToPublicKey(pubBytes)
 
 
 
-mess = b'coucou!'
+mess = 'coucou!'
 pubBytes = RSAUtils.publicKeyToPublicBytes(public)
 public = RSAUtils.publicBytesToPublicKey(pubBytes)
 encrypted = RSAUtils.encrypt(mess, public)
