@@ -11,11 +11,22 @@ users = []
 #test sur l'annuaire pour créer un utilisateur et donc un annuaire
 AnnuaireUtils.creerUser(users, "Yon" , "1234")
 AnnuaireUtils.creerUser(users, "Pi p", "3.14159265359")
+AnnuaireUtils.creerUser(users, "A supprimer", "MdpFacile")
+AnnuaireUtils.creerUser(users, "Enzo", "Mdp")
+AnnuaireUtils.creerUser(users, "Che", "ikh")
 
 #test pour modifier un annuaire
 AnnuaireUtils.modifAnnuaire(users , "Yon" , "1234" , "./users")
 #test pour modifier un annuaire mais mauvais mdp
 AnnuaireUtils.modifAnnuaire(users, "Pi p", "3,14" , "./users")
+AnnuaireUtils.modifAnnuaire(users, "Enzo", "Mdp", "./users")
+#test pour supprimer un annuaire avec mdp
+AnnuaireUtils.supprUser(users, "A supprimer", "MdpFacile")
+AnnuaireUtils.supprUser(users, "Che", "ikh")
+#test pour supprimer un annuaire avec mauvais mdp
+#AnnuaireUtils.supprUser(users, "A supprimer", "MdpFacil")
+#test pour supprimer un annuaire avec mauvaise personne
+#AnnuaireUtils.supprUser(users, "A supprime", "MdpFacile")
 
 
 """
