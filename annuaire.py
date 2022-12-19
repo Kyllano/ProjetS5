@@ -21,6 +21,10 @@ def creerAnnuaire(username : str) :
 	fichierAnnuaire.close()
 	return None
 
+def supprimerAnnuaire(username : str) :
+	if (os.path.exists("./annuaires/" + username + ".txt")) : 
+		os.remove("./annuaires/" + username + ".txt")
+
 def importAnnuaire(username : str) :
 	try :
 		file = open("./annuaires/" + username + ".txt", 'r')

@@ -83,6 +83,9 @@ def importUsers(filename : str) :
 def addUser(username : str, password : str, userList : list) :
     if username == "" :
         return -1
+    
+    if password == "" :
+        return -2
 
     #Je remet un try except ici. Ceci est redondant, et on pourrais utiliser un raise en ligne 26 et faire un try except de User() ici
     #Malheureusement, je ne sais pas encore bien gérer les raise Exception()
