@@ -54,6 +54,7 @@ def exportAnnuaire(ann : Annuaire) :
 	
 	file.close()
 
+#peut etre refaite avec importAnnuaire(), ce qui la rendrais plus lisible
 #-1 err ouverture fich
 #-2 user a deja les droits
 def addRightsAnnuaires(nomAnnuaire : str, username : str) :
@@ -82,6 +83,7 @@ def addRightsAnnuaires(nomAnnuaire : str, username : str) :
 	file.close()
 	return 0
 
+#peut etre refaite avec importAnnuaire(), ce qui la rendrais plus lisible
 #-1 err ouverture fich
 #-2 user n a pas les droits
 def removeRightsAnnuaires(nomAnnuaire : str, username : str) :
@@ -119,6 +121,9 @@ def addContact(username : str, nom : str, prenom : str, mail : str, adresse : st
 		portable = ""
 
 	ann = importAnnuaire(username)
+	if not isinstance(ann, Annuaire) :
+		return -1
+
 	if ann.contacts == [] :
 		ID = str(1)
 	else :	
@@ -129,5 +134,49 @@ def addContact(username : str, nom : str, prenom : str, mail : str, adresse : st
 
 #ici username donne le nom de l'annuaire  dans lequel on supprime le contacte
 #ID est l'ID du contacte à supprimer
-def supprContact(username : str, ID : int) :
+def removeContact(username : str, ID : int) :
 	ann = importAnnuaire(username)
+	if not isinstance(ann, Annuaire) :
+		return -1
+
+	for c in ann.contacts :
+		if c[0] == str(ID) :
+			ann.contacts.remove(c)
+	exportAnnuaire(ann)
+	
+def modifierContact(username : str, ID : int,  nom : str, prenom : str, mail : str, adresse : str = None, portable : str = None) :
+	ann = importAnnuaire(username)
+	if not isinstance(ann, Annuaire) :
+		return -1
+
+	IDhasbeenfound = False
+	for i in range(0, len(ann.contacts)) :
+		if ann.contacts[i][0] == str(ID) :
+			ann.contacts[i] = [str(ID), nom, prenom, mail, adresse, portable]
+			IDhasbeenfound = True
+
+	if not IDhasbeenfound :
+		return -2
+
+	exportAnnuaire(ann)
+
+def rearrangeIDs(username : str) :
+	ann = importAnnuaire(username)
+	if not isinstance(ann, Annuaire) :
+		return -1
+
+	for i in range(1, len(ann.contacts)) :
+		ann.contacts[i][0] = str(i+1)
+	
+	exportAnnuaire(ann)
+
+def afficherAnnuaire(username : str) :
+	ann = importAnnuaire(username)
+
+	print("Qui a les droits : ")
+	for right in ann.userRights :
+		print("-", right)
+
+	print("la liste de contacte :")
+	for c in ann.contacts :
+		print(f"{c[0]:4}| {c[1]:10}| {c[2]:10}| {c[3]:15}| {c[4]:20}| {c[5]:10}")

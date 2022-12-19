@@ -17,9 +17,8 @@ users = UserUtils.importUsers("passwd.txt")
 #UserUtils.addUser("root", "root", users)
 #annuaire.removeRightsAnnuaires("root", "coucou")
 ann = annuaire.importAnnuaire("root")
-annuaire.addContact("root", "jean", "tamere", "mymail@mail", None, "01875269")
-annuaire.addContact("root", "jean", "tamere", "mymail@mail", None, "01875269")
-annuaire.addContact("root", "jean", "tamere", "mymail@mail", None, "01875269")
+
+annuaire.afficherAnnuaire("root")
 
 
 
