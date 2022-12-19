@@ -1,6 +1,7 @@
 from cryptography.hazmat.primitives import hashes
 import random
 import string
+import annuaire
 
 
 class User :
@@ -73,6 +74,8 @@ def importUsers(filename : str) :
     file.close()
     return users
 
+
+#LA FONCTION A UTILISER POUR AJOUTER UN UTILISATEUR / UN ANNUAIRE
 #0  Succès
 #-1 Nom invalide
 #-2 Mot de passe invalide
@@ -95,6 +98,8 @@ def addUser(username : str, password : str, userList : list) :
     
     newUser = User(username, password, False)
     userList.append(newUser)
+    annuaire.creerAnnuaire(username)
+    
     exportUsers(userList, "passwd.txt")
     return 0
 

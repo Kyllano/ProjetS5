@@ -1,22 +1,33 @@
 import ClientServerClass
+import string
 import sys
-import UserUtils
 import RSAUtils
+import UserUtils
+import annuaire
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
 
 
-import string
 
 users = []
 users = UserUtils.importUsers("passwd.txt")
 
-private, public = RSAUtils.createKeys()
+#UserUtils.addUser("root", "root", users)
+#annuaire.removeRightsAnnuaires("root", "coucou")
+ann = annuaire.importAnnuaire("root")
+annuaire.addContact("root", "jean", "tamere", "mymail@mail", None, "01875269")
+annuaire.addContact("root", "jean", "tamere", "mymail@mail", None, "01875269")
+annuaire.addContact("root", "jean", "tamere", "mymail@mail", None, "01875269")
+
+
 
 
 """
+private, public = RSAUtils.createKeys()
+
+
 pubBytes = public.public_bytes(serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo)
 pubKey = public
 pubBytes = RSAUtils.publicKeyToPublicBytes(pubKey)
@@ -25,6 +36,7 @@ pubKey = RSAUtils.publicBytesToPublicKey(pubBytes)
 
 
 
+"""
 
 mess = 'coucou!'
 pubBytes = RSAUtils.publicKeyToPublicBytes(public)
@@ -36,7 +48,6 @@ print(decrypted)
 
 
 
-"""
 
 UserUtils.removeUser("prout", users)
 
