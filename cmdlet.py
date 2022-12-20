@@ -24,3 +24,15 @@ def removeUserCmd(username : str, userlist : list) :
         case -3 :
             print("Utilisateur deja supprimé ou inexistant")
     annuaire.supprimerAnnuaire(username)
+
+def changePasswordCmd(user : UserUtils.User, nouveaumdp : str, userlist : list) :
+    retour = UserUtils.changePassword(user.name, nouveaumdp, userlist)
+    match (retour) :
+        case 0 :
+            print("Mot de passe modifié avec succès")
+        case -1 :
+            print("Nom d'utilisateur invalide")
+        case -2 :
+            print("Mot de passe invalide")
+        case -3 :
+            print("Utilisateur non trouvé")

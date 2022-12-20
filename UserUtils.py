@@ -127,6 +127,9 @@ def removeUser(username : str, userList : list) :
 #-3 user not found
 def changePassword(username : str, password : str, userList : list) :
 
+    if password == "" :
+        return -2
+
     err = removeUser(username, userList)
     if (err != 0) :
         return err
