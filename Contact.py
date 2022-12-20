@@ -11,6 +11,10 @@ def Ajouter_contact(nom,prenom,email,numtel,adresse):
     Id = Id + 1
     contact = str(Id) + ";" + nom + ";" + prenom + ";" + email + ";" + numtel + "," + adresse + "\n"
     file.write(contact)
+
+
+
+    # test
 def Modifier_contact(id,nom,prenom,email,numtel,adresse):
     file = open("./Contacts.txt" ,"r")
     lines = file.readlines()
