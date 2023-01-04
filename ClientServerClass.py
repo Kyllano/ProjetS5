@@ -59,9 +59,13 @@ class Client :
         message = self.sock.recv(1024)
         return message.decode()
 
-    #Permet de recevoir jusque 4096 bytes envoyés. Due au fait que généralement, les longs message ne sont pas des strings, il est à l'utilisateur de décoder l'information
+    #Permet de recevoir jusque 2048 bytes envoyés. Due au fait que généralement, les longs message ne sont pas des strings, il est à l'utilisateur de décoder l'information
     def receive(self) :
-        message = self.sock.recv(4096)
+        message = self.sock.recv(2048)
+        return message
+
+    def receive256(self) :
+        message = self.sock.recv(256)
         return message
     
     #Permet de recevoir des messages de tailles indeterminés. Ici aussi, on n'effetue pas de traitement sur l'information, on ne fait que la recevoir
@@ -157,9 +161,9 @@ class Server :
         message = self.conn.recv(1024)
         return message.decode()
 
-    #Permet de recevoir jusque 4096 bytes envoyés. Due au fait que généralement, les longs message ne sont pas des strings, il est à l'utilisateur de décoder l'information
+    #Permet de recevoir jusque 2048 bytes envoyés. Due au fait que généralement, les longs message ne sont pas des strings, il est à l'utilisateur de décoder l'information
     def receive(self) :
-        message = self.conn.recv(4096)
+        message = self.conn.recv(2048)
         return message
     
     #Permet de recevoir des messages de tailles indeterminés. Ici aussi, on n'effetue pas de traitement sur l'information, on ne fait que la recevoir

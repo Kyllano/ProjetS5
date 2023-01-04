@@ -3,16 +3,17 @@ import UserUtils
 import ClientServerClass
 import RSAUtils
 import time
+import annuaire
 
 users = []
 users = UserUtils.importUsers("passwd.txt")
 
-currentUser = UserUtils.findUser("Jesse", users)
+currentUser = None
 
 private, public = RSAUtils.createKeys()
 
 #Création de la connexion
-port = input("Veuillez indiquer un port sur lequel le client devra se connecter : ")
+port = 2222 #input("Veuillez indiquer un port sur lequel le client devra se connecter : ")
 try :
     int(port)
 except ValueError:
@@ -25,88 +26,156 @@ if (isinstance(addr, int)) :
     exit(-1)
 
 print("Synchronisation ...")
-time.sleep(1)
+#time.sleep(1)
 print("utilisateur connecté")
 #Connexion initiée.
 
 #Securisation connexion avec RSA
 print("Envoie de la clé publique")
 serveur.send(RSAUtils.publicKeyToPublicBytes(public))
-time.sleep(1)
+#time.sleep(1)
 print("Reception de la clé ...")
 publicClient = serveur.receiveAll()
 publicClient = RSAUtils.publicBytesToPublicKey(publicClient)
 print("Clé du client reçue")
-time.sleep(1)
+#Echange de clé effectué
 
-serveur.send(RSAUtils.encrypt(b'coucou !', publicClient))
-
-
-
-
-cmd = "quit".split()
-while cmd[0] != "quit" :
-    
-    #cmd = input(">").split(" ")
-
-    if len(cmd) == 2 and cmd[0] == "add" and cmd[1] == "user" :
-        if currentUser.name == "root" :
-            username = input("Nom de l'utilisateur : ")
-            mdp = input("Nouveau mot de passe : ")
-            cmdlet.ajouterUserCmd(username, mdp, users)
+#Authentification
+print("\n Authentication !")
+retour = None
+while (currentUser == None) :
+    credentials = RSAUtils.decrypt(serveur.receiveAll(), private).decode()
+    credentials = credentials.split(" ")
+    if (UserUtils.findUser(credentials[0], users)) :
+        user = UserUtils.findUser(credentials[0], users)
+        if (UserUtils.checkPasswordUser(credentials[1], user)) :
+            currentUser = user
+            retour = 0
         else :
-            print("Seul l'administrateur peut créer des utilisateurs")
+            retour = 1
+    else :
+        retour = 2
+    serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
 
-    elif len(cmd) == 2 and cmd[0] == "rm" and cmd[1] == "user" :
+print("utilisateur authentifié ! : ", retour)
+
+
+
+
+
+cmd = [None]
+while cmd[0] != "logout" :
+    cmd = RSAUtils.decrypt(serveur.receiveAll(), private).decode().split(" ")
+
+
+    #ADD USER [NOM] [PASS]
+    if len(cmd) == 4 and cmd[0] == "add" and cmd[1] == "user" :
         if currentUser.name == "root" :
-            username = input("Nom de l'utilisateur : ")
-            cmdlet.removeUserCmd(username, users)
+            username = cmd[2]
+            password = cmd[3]
+            retour = UserUtils.addUser(username, password, users)
         else :
-            print("Seul l'administrateur peut supprimer des utilisateurs")
+            retour = 4
+        #On envoie le retour d'erreur
+        serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
 
-    #J'aime pas avoir autant de if/else embriqué. Mais j'ai ni le choix ni le temps de rafctoriser ce code ci
-    if len(cmd) == 2 and cmd[0] == "change" and cmd[1] == "password" :
+
+    #RM USER [NOM]
+    elif len(cmd) == 3 and cmd[0] == "rm" and cmd[1] == "user" :
         if currentUser.name == "root" :
-            username = input("Nom de l'utilisateur : ")
-            username = UserUtils.findUser(username, users)
-            if (username != None) :
-                nouveaumdp = input("Nouveau mot de passe : ")
-                cmdlet.changePasswordCmd(username, nouveaumdp, users)
+            username = cmd[2]
+            retour = UserUtils.removeUser(username, users)
+        else :
+            retour = 4
+        serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
+        
+
+    #CHANGE PASS USER NEW OLD
+    if len(cmd) == 5 and cmd[0] == "change" and cmd[1] == "pass" :
+        if currentUser.name == "root" :
+            user = cmd[2]
+            user = UserUtils.findUser(user, users)
+            if (user != None) :
+                nouveaumdp = cmd[3]
+                retour = UserUtils.changePassword(user.name, nouveaumdp, users)
             else :
-                print("Utilisateur non trouvé ou inexistant")
+                print("ce 3 la?")
+                retour = 3
         else :
-            username = currentUser
-            mdp = input("Votre ancien mot de passe : ")
+            user = currentUser
+            mdp = cmd[4]
             if (UserUtils.checkPasswordUser(mdp, currentUser)) :
-                nouveaumdp = input("Nouveau mot de passe : ")
-                cmdlet.changePasswordCmd(username, nouveaumdp, users)
+                nouveaumdp = cmd[3]
+                retour = UserUtils.changePassword(user.name, nouveaumdp, users)
                 currentUser = UserUtils.findUser(currentUser.name, users)
             else :
-                print("Mot de passe invalide")
-    
+                retour = 5
+        serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
+       
+    #WHOAMI
     if len(cmd) == 1 and cmd[0] == "whoami" :
-        print(currentUser.name)
+        serveur.send(RSAUtils.encrypt(currentUser.name.encode(), publicClient))
     
-    if len(cmd) == 2 and cmd[0] == "su":
+    #LIST USERS
+    if len(cmd) == 2 and cmd[0] == "list" and cmd[1] == "users" :
+        reponse = ""
+        for user in users :
+            reponse += "-->" + user.name +"\n"
+        serveur.send(RSAUtils.encrypt(reponse[0:-1].encode(), publicClient))
+
+    #SU USER MDP
+    if len(cmd) == 3 and cmd[0] == "su":
         user = UserUtils.findUser(cmd[1], users)
         if (user != None) :
             if (currentUser.name == "root") :
                 currentUser = user
-                print("Changement d'utilisateur effectué avec succès")
+                retour = 0
             else :
-                mdp = input("Mot de passe : ")
+                mdp = cmd[2]
                 if (UserUtils.checkPasswordUser(mdp, user)) :
                     currentUser = user
-                    print("Changement d'utilisateur effectué avec succès")
+                    retour = 0
                 else :
-                    print("Mot de passe invalide")
+                    retour = 2
         else :
-            print("Utilisateur invalide ou inexistant")
+            retour = 3
+        serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
     
-    if len(cmd) == 2 and cmd[0] == "list" and cmd[1] == "users" :
-        for user in users :
-            print("-->", user.name)
+    #SHOW USER
+    if len(cmd) == 2 and cmd[0] == "show" :
+        user = UserUtils.findUser(cmd[1], users)
+        if (user != None) :
+            ann = annuaire.importAnnuaire(user.name)
+            #Si l'utilisateur a les droits
+            if(currentUser.name in ann.userRights or currentUser.name == "root") :
+                retour = 0
+            else :
+                retour = 1
+        else :
+            retour = 2
+        
+        serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
 
-    if (len(cmd) == 1 or len(cmd) ==2) and cmd[0] == "show" :
-        pass
-        #TODO montrer
+        if retour == 0 :
+            nbContact = len(ann.contacts)
+            print("NbContact : " , nbContact)
+            time.sleep(1)
+            serveur.send(RSAUtils.encrypt(nbContact.to_bytes(5, 'little'), publicClient))
+
+            print("CLIENT : ", publicClient.key_size)
+            for c in ann.contacts :
+                tosend = c[0]+ " " + c[1]+ " " + c[2]+ " " +c[3]+ " " + c[4]+ " " + c[5]
+                print("j'envoie contacte : ", tosend)
+                print("de longueur : ", len(tosend))
+                time.sleep(0)
+                mess = RSAUtils.encrypt(tosend.encode(), publicClient)
+                #print("MESS : \n", mess)
+                serveur.send(mess)
+
+
+
+
+
+    if len(cmd) == 1 and cmd[0] == "logout" :
+        print("deconnexion serveur")
+        serveur.closeConnection()

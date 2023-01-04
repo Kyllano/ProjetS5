@@ -42,9 +42,9 @@ def exportUsers(userList : list, filename : str) :
         file = open(filename, 'w')
     except OSError:
         print("impossible d'ouvrir le fichier")
-        return -1
+        return 1
     
-    nbUser=0
+    nbUser=1
     for user in userList :
         if isinstance(user, User) :
             nbUser += 1
@@ -77,15 +77,15 @@ def importUsers(filename : str) :
 
 #LA FONCTION A UTILISER POUR AJOUTER UN UTILISATEUR / UN ANNUAIRE
 #0  Succès
-#-1 Nom invalide
-#-2 Mot de passe invalide
-#-3 User already exists
+#1 Nom invalide
+#2 Mot de passe invalide
+#3 User already exists
 def addUser(username : str, password : str, userList : list) :
     if username == "" :
-        return -1
+        return 1
     
     if password == "" :
-        return -2
+        return 2
 
     #Je remet un try except ici. Ceci est redondant, et on pourrais utiliser un raise en ligne 26 et faire un try except de User() ici
     #Malheureusement, je ne sais pas encore bien gérer les raise Exception()
@@ -93,11 +93,11 @@ def addUser(username : str, password : str, userList : list) :
         #On essaye d'encoder le mot de passe depuis utf-8
         password.encode()
     except UnicodeError:
-        return -2
+        return 2
 
     for user in userList :
         if user.name == username :
-            return -3
+            return 3
     
     newUser = User(username, password, False)
     userList.append(newUser)
@@ -107,11 +107,11 @@ def addUser(username : str, password : str, userList : list) :
     return 0
 
 #0  Succès
-#-1 username invalide
-#-3 user not found
+#1 username invalide
+#3 user not found
 def removeUser(username : str, userList : list) :
     if username == "" :
-        return -1
+        return 1
 
     for i in range(0, len(userList)) :
         if userList[i].name == username:
@@ -119,16 +119,16 @@ def removeUser(username : str, userList : list) :
             exportUsers(userList, "passwd.txt")
             return 0
 
-    return -3
+    return 3
     
 #0  Succès
-#-1 Nom invalide
-#-2 Mot de passe invalide
-#-3 user not found
+#1 Nom invalide
+#2 Mot de passe invalide
+#3 user not found
 def changePassword(username : str, password : str, userList : list) :
 
     if password == "" :
-        return -2
+        return 2
 
     err = removeUser(username, userList)
     if (err != 0) :

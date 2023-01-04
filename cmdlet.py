@@ -13,6 +13,8 @@ def ajouterUserCmd(username : str, password : str, userlist : list) :
             print("Mot de passe invalide")
         case -3 :
             print("Cet utilisateur existe deja")
+        case -4 :
+            print("Seul l'utilisateur root peut ajouter ou supprimer un utilisateur")
 
 def removeUserCmd(username : str, userlist : list) :
     retour = UserUtils.removeUser(username, userlist)

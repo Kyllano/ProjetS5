@@ -10,7 +10,10 @@ from cryptography.hazmat.primitives.asymmetric import padding
 
 
 
+test = "hehehe"
+print(test[0:-1])
 
+"""
 users = []
 users = UserUtils.importUsers("passwd.txt")
 
@@ -23,7 +26,6 @@ annuaire.afficherAnnuaire("root")
 
 
 
-"""
 private, public = RSAUtils.createKeys()
 
 
