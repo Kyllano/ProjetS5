@@ -7,7 +7,7 @@ isAuthenticated = False
 currentUser = None
 
 
-#TODO GET CLIENT
+#TODO GET CLIENT INFOS
 client = ClientServerClass.Client(2222, "127.0.0.1")
 
 
@@ -23,8 +23,8 @@ client.send(RSAUtils.publicKeyToPublicBytes(public))
 
 
 while (not isAuthenticated) :
-    username = input("Veuillez indiquer votre identifiant : ")
-    mdp = input("Veuillez indiquer votre mot de passe : ")
+    username = input("Veuillez indiquer votre identifiant : ").replace(" ", "_")
+    mdp = input("Veuillez indiquer votre mot de passe : ").replace(" ", "_")
 
     if (username != "" and mdp != "") :
         credentials = username + " " + mdp
@@ -52,8 +52,8 @@ while cmd[0] != "logout" :
     cmd = input(">").split(" ")
 
     if len(cmd) == 2 and cmd[0] == "add" and cmd[1] == "user" :
-        username = input("Nom de l'utilisateur : ")
-        mdp = input("Nouveau mot de passe : ")
+        username = input("Nom de l'utilisateur : ").replace(" ", "_")
+        mdp = input("Nouveau mot de passe : ").replace(" ", "_")
         cmdserv = "add user " + username + " " + mdp
 
         print("on envoie :", cmdserv)
@@ -110,6 +110,7 @@ while cmd[0] != "logout" :
         print(reponse)
 
     #su user
+    #attention ! ecrire dans le help que les espace doivent etre remplacé par des _
     if len(cmd) == 2 and cmd[0] == "su":
         if (currentUser == "root") :
             cmdserv = "su "+ cmd[1] +" blank"
@@ -142,13 +143,28 @@ while cmd[0] != "logout" :
 
             print("Annuaire de ", user)
             for i in range(0, nbContacts) :
-                recu = client.receive256()
-                #print("RECU \n :", recu)
-                recu = RSAUtils.decrypt(recu, private).decode()
+                recu = RSAUtils.decrypt(client.receive256(), private).decode()
                 print(recu)
-                print("Je recois contacte")
     
-    print("JAI EU LE TEMPS DE FINIR")
+    if len(cmd) == 2 and cmd[0] == "add" and cmd[1] == "contact" :
+        nom = input("Nom : ").replace(" ", "_")
+        prenom = input("Prenom : ").replace(" ", "_")
+        mail = input("Mail : ").replace(" ", "_")
+        addresse = input("Addresse : ").replace(" ", "_")
+        tel = input("Numero de Telephone : ").replace(" ", "_")
+        if (nom == "" or prenom == "" or mail == "") :
+            print("Le contacte doit avoir au moins un nom, prenom et mail valide")
+        else :
+            cmdserv = "add contact " + nom + " " + prenom + " " + mail + " " + addresse + " " + tel
+            
+            client.send(RSAUtils.encrypt(cmdserv.encode(), publicServer))
+            reponse = RSAUtils.decrypt(client.receiveAll(), private)
+            reponse = int.from_bytes(reponse, 'little')
+
+            print("RETOUR :", reponse)
+
+
+        
 
 
             

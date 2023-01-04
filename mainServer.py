@@ -172,7 +172,9 @@ while cmd[0] != "logout" :
                 #print("MESS : \n", mess)
                 serveur.send(mess)
 
-
+    if len(cmd) == 7 and cmd[0] == "add" and cmd[1] == "contact" :
+        retour = annuaire.addContact(currentUser.name, cmd[2], cmd[3], cmd[4], cmd[5], cmd[6])
+        serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
 
 
 

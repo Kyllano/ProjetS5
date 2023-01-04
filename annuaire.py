@@ -135,18 +135,8 @@ def addContact(username : str, nom : str, prenom : str, mail : str, adresse : st
 	
 	ann.contacts.append([ID, nom, prenom, mail, adresse, portable])
 	exportAnnuaire(ann)
+	return 0
 
-#ici username donne le nom de l'annuaire  dans lequel on supprime le contacte
-#ID est l'ID du contacte à supprimer
-def removeContact(username : str, ID : int) :
-	ann = importAnnuaire(username)
-	if not isinstance(ann, Annuaire) :
-		return -1
-
-	for c in ann.contacts :
-		if c[0] == str(ID) :
-			ann.contacts.remove(c)
-	exportAnnuaire(ann)
 	
 def modifierContact(username : str, ID : int,  nom : str, prenom : str, mail : str, adresse : str = None, portable : str = None) :
 	ann = importAnnuaire(username)
@@ -184,3 +174,18 @@ def afficherAnnuaire(username : str) :
 	print("la liste de contacte :")
 	for c in ann.contacts :
 		print(f"{c[0]:4}| {c[1]:10}| {c[2]:10}| {c[3]:15}| {c[4]:20}| {c[5]:10}")
+
+#ici username donne le nom de l'annuaire  dans lequel on supprime le contacte
+#ID est l'ID du contacte à supprimer
+def removeContact(username : str, ID : int) :
+	ann = importAnnuaire(username)
+	if not isinstance(ann, Annuaire) :
+		return -1
+
+	for c in ann.contacts :
+		if c[0] == str(ID) :
+			ann.contacts.remove(c)
+	exportAnnuaire(ann)
+
+	#A TESTER
+	#rearrangeIDs(username)
