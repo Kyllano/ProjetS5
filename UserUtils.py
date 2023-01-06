@@ -83,10 +83,10 @@ def importUsers(filename : str) :
 #3 User already exists
 def addUser(username : str, password : str, userList : list) :
     if username == "" :
-        return 1
+        return 84
     
     if password == "" :
-        return 2
+        return 85
 
     #Je remet un try except ici. Ceci est redondant, et on pourrais utiliser un raise en ligne 26 et faire un try except de User() ici
     #Malheureusement, je ne sais pas encore bien gérer les raise Exception()
@@ -94,18 +94,18 @@ def addUser(username : str, password : str, userList : list) :
         #On essaye d'encoder le mot de passe depuis utf-8
         password.encode()
     except UnicodeError:
-        return 2
+        return 85
 
     for user in userList :
         if user.name == username :
-            return 3
+            return 81
     
     newUser = User(username, password, False)
     userList.append(newUser)
     annuaire.creerAnnuaire(username)
     
     exportUsers(userList, "passwd.txt")
-    return 0
+    return 80
 
 #0  Succès
 #1 username invalide

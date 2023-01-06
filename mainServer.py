@@ -74,7 +74,7 @@ while cmd[0] != "logout" :
             password = cmd[3]
             retour = UserUtils.addUser(username, password, users)
         else :
-            retour = 4
+            retour = 83
         #On envoie le retour d'erreur
         serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
 

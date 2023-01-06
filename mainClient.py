@@ -66,14 +66,11 @@ while cmd[0] != "logout" :
         mdp = input("Nouveau mot de passe : ").replace(" ", "_")
         cmdserv = "add user " + username + " " + mdp
 
-        print("on envoie :", cmdserv)
-
         client.send(RSAUtils.encrypt(cmdserv.encode(), publicServer))
         reponse = RSAUtils.decrypt(client.receiveAll(), private)
         reponse = int.from_bytes(reponse, 'little')
 
-        #TODO afficher erreur POUR TOUTES LES FONCTIONS
-        print("RETOUR :", reponse)
+        
         
 
     elif len(cmd) == 2 and cmd[0] == "rm" and cmd[1] == "user" :
