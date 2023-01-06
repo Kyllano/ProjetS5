@@ -182,10 +182,15 @@ def removeContact(username : str, ID : int) :
 	if not isinstance(ann, Annuaire) :
 		return -1
 
+	IDtrouve = False
 	for c in ann.contacts :
 		if c[0] == str(ID) :
 			ann.contacts.remove(c)
+			IDtrouve = True
 	exportAnnuaire(ann)
+	rearrangeIDs(username)
 
-	#A TESTER
-	#rearrangeIDs(username)
+	if (IDtrouve) :
+		return 0
+	else :
+		return -2

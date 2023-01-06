@@ -1,5 +1,6 @@
 import ClientServerClass
 import RSAUtils
+import annuaire
 import time
 
 private, public = RSAUtils.createKeys()
@@ -50,6 +51,15 @@ cmd = [None]
 while cmd[0] != "logout" :
     
     cmd = input(">").split(" ")
+
+    if len(cmd) == 1 and cmd[0] == "help" :
+        print("Les commandes possibles sont les suivantes :")
+        print(">>logout\nPermet de se deconnecter")
+        print(">>whoami\nPermet de connaitre l'identité de l'utilisateur connecté")
+        print(">>change pass\nPermet de changer le mot de passe de l'utilisateur connecté")
+        print(">>su [nom d'utilisateur]\nPermet de changer de compte utilisateur")
+        print(">>add user\nPermet à l'utilisateur root d'ajouter un utilisateur")
+        print(">>rm user\nPermet à l'utilisateur root de supprimer un utilisateur")
 
     if len(cmd) == 2 and cmd[0] == "add" and cmd[1] == "user" :
         username = input("Nom de l'utilisateur : ").replace(" ", "_")
@@ -164,6 +174,17 @@ while cmd[0] != "logout" :
             print("RETOUR :", reponse)
 
 
+    if len(cmd) == 3 and cmd[0] == "rm" and cmd[1] == "contact" :
+        if (RSAUtils.isdigit(cmd[2])) :
+            cmdserv = "rm contact " + cmd[2]
+            client.send(RSAUtils.encrypt(cmdserv.encode(), publicServer))
+            reponse = RSAUtils.decrypt(client.receiveAll(), private)
+            reponse = int.from_bytes(reponse, 'little')
+
+            print("RETOUR :", reponse)
+
+        else :
+            print("L'ID de contact fournit n'existe pas")
         
 
 

@@ -2,6 +2,7 @@ from cryptography.hazmat.primitives import hashes
 import random
 import string
 import annuaire
+import os
 
 
 class User :
@@ -116,6 +117,7 @@ def removeUser(username : str, userList : list) :
     for i in range(0, len(userList)) :
         if userList[i].name == username:
             userList.pop(i)
+            annuaire.supprimerAnnuaire(username)
             exportUsers(userList, "passwd.txt")
             return 0
 
