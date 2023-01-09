@@ -35,13 +35,13 @@ while (not isAuthenticated) :
         reponse = int.from_bytes(reponse, 'little')
         print(reponse)
         match (reponse) :
-            case 0:
+            case 10:
                 isAuthenticated = True
                 currentUser = username
                 print("succes")
-            case -1:
+            case 11:
                 print("identifiants invalides ou inexistants")
-            case -2 :
+            case 12 :
                 print("utilisateur inexistant")
     else :
         print("Identifiants invalide")
