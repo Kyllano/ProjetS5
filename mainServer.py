@@ -3,6 +3,7 @@ import ClientServerClass
 import RSAUtils
 import time
 import annuaire
+import retours
 
 users = []
 users = UserUtils.importUsers("passwd.txt")
@@ -56,7 +57,7 @@ while (currentUser == None) :
         retour = 12
     serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
 
-print("utilisateur authentifié ! : ", retour)
+retours.analyseCodesRetours(retour)
 
 
 

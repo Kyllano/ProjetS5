@@ -30,7 +30,7 @@ def importAnnuaire(username : str) :
 		file = open("./annuaires/" + username + ".txt", 'r')
 	except OSError:
 		print("impossible d'ouvrir le fichier")
-		return -1
+		return 2
 	
 	content = file.read()
 	content = content.split('\n')
@@ -49,7 +49,7 @@ def exportAnnuaire(ann : Annuaire) :
 		file = open("./annuaires/" + ann.owner + ".txt", 'w')
 	except OSError:
 		print("impossible d'ouvrir le fichier")
-		return -1
+		return 1
 
 	file.write(','.join(ann.userRights))
 	
@@ -59,21 +59,22 @@ def exportAnnuaire(ann : Annuaire) :
 	file.close()
 
 #peut etre refaite avec importAnnuaire(), ce qui la rendrais plus lisible
-#-1 err ouverture fich
-#-2 user a deja les droits
+#60 succes
+#62 err ouverture fich
+#63 user a deja les droits
 def addRightsAnnuaires(nomAnnuaire : str, username : str) :
 	try :
 		file = open("./annuaires/" + nomAnnuaire + ".txt", 'r')
 	except OSError:
 		print("impossible d'ouvrir le fichier")
-		return -1
+		return 62
 	
 	content = file.read().split('\n')
 	rights = content[0].split(',')
 	file.close()
 
 	if username in rights :
-		return -2
+		return 63
 	
 	rights.append(username)
 	file = open("./annuaires/" + nomAnnuaire + ".txt", 'w')
@@ -85,24 +86,25 @@ def addRightsAnnuaires(nomAnnuaire : str, username : str) :
 	for c in content[1:] :
 		file.write("\n" + c)
 	file.close()
-	return 0
+	return 60
 
 #peut etre refaite avec importAnnuaire(), ce qui la rendrais plus lisible
-#-1 err ouverture fich
-#-2 user n a pas les droits
+#65 succes
+#66 err ouverture fich
+#67 user n a pas les droits
 def removeRightsAnnuaires(nomAnnuaire : str, username : str) :
 	try :
 		file = open("./annuaires/" + nomAnnuaire + ".txt", 'r')
 	except OSError:
 		print("impossible d'ouvrir le fichier")
-		return -1
+		return 66
 	
 	content = file.read().split('\n')
 	rights = content[0].split(',')
 	file.close()
 
 	if username not in rights :
-		return -2
+		return 67
 	
 	rights.remove(username)
 	print(rights)
@@ -115,9 +117,11 @@ def removeRightsAnnuaires(nomAnnuaire : str, username : str) :
 	for c in content[1:] :
 		file.write("\n" + c)
 	file.close()
-	return 0
+	return 60
 	
 #ici username donne le nom de l'annuaire  dans lequel on ajoute le contacte
+#30 succes
+#32 annauire non trouver
 def addContact(username : str, nom : str, prenom : str, mail : str, adresse : str = None, portable : str = None) :
 	if adresse == None :
 		adresse = ""
@@ -126,7 +130,7 @@ def addContact(username : str, nom : str, prenom : str, mail : str, adresse : st
 
 	ann = importAnnuaire(username)
 	if not isinstance(ann, Annuaire) :
-		return -1
+		return 32
 
 	if ann.contacts == [] :
 		ID = str(1)
@@ -135,13 +139,16 @@ def addContact(username : str, nom : str, prenom : str, mail : str, adresse : st
 	
 	ann.contacts.append([ID, nom, prenom, mail, adresse, portable])
 	exportAnnuaire(ann)
-	return 0
+	return 30
 
-	
+
+#40 succes
+#42 ID non trouvé
+#43 annuaire non trouvé	
 def modifierContact(username : str, ID : int,  nom : str, prenom : str, mail : str, adresse : str = None, portable : str = None) :
 	ann = importAnnuaire(username)
 	if not isinstance(ann, Annuaire) :
-		return -1
+		return 43
 
 	IDhasbeenfound = False
 	for i in range(0, len(ann.contacts)) :
@@ -150,14 +157,15 @@ def modifierContact(username : str, ID : int,  nom : str, prenom : str, mail : s
 			IDhasbeenfound = True
 
 	if not IDhasbeenfound :
-		return -2
+		return 42
 
 	exportAnnuaire(ann)
+	return 40
 
 def rearrangeIDs(username : str) :
 	ann = importAnnuaire(username)
 	if not isinstance(ann, Annuaire) :
-		return -1
+		return 4
 
 	for i in range(1, len(ann.contacts)) :
 		ann.contacts[i][0] = str(i+1)
@@ -177,10 +185,13 @@ def afficherAnnuaire(username : str) :
 
 #ici username donne le nom de l'annuaire  dans lequel on supprime le contacte
 #ID est l'ID du contacte à supprimer
+#50 succes
+#51 contact non trouvé
+#52 annuaire non trouvé
 def removeContact(username : str, ID : int) :
 	ann = importAnnuaire(username)
 	if not isinstance(ann, Annuaire) :
-		return -1
+		return 52
 
 	IDtrouve = False
 	for c in ann.contacts :
@@ -191,6 +202,6 @@ def removeContact(username : str, ID : int) :
 	rearrangeIDs(username)
 
 	if (IDtrouve) :
-		return 0
+		return 50
 	else :
-		return -2
+		return 51

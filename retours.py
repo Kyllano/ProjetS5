@@ -1,6 +1,14 @@
 #Fonction des codes retour pour les autres fonctions (code défi dans la RFC certains ajout et certains manque nécessaire fait après implémentation)
 def analyseCodesRetours (code : int) :
     match (code) :
+        case 1 : 
+            print("Exportation annuaire : Erreur - impossible ouvrir le fichier annuaire")
+        case 2 : 
+            print("Importation annuaire : Erreur - impossible ouvrir le fichier annuaire")
+        case 3 : 
+            print("Ouverture de fichier impossible")
+        case 4 : 
+            print("ID contact non trouvé dans l'annuaire")
         case 10 : 
             print("Authentification : Succès")
         case 11 : 
@@ -17,20 +25,38 @@ def analyseCodesRetours (code : int) :
             print("Création contact : Succès")
         case 31 : 
             print("Création contact : Echec - ID déja existant")
+        case 32 : 
+            print("Création contact : Echec - annuaire non trouvé pour l'ajout du contact")
         case 40 : 
             print("Modifier contact : Succès")
         case 41 : 
             print("Modifier contact : Echec - contact non trouvé")
         case 42 : 
             print("Modifier contact : Echec - coordonnées obligatoire saisie invalide")
+        case 43 : 
+            print("Création contact : Echec - annuaire non trouvé pour modification du contact")
+        case 44 : 
+            print("Création contact : Echec - ID contact non trouvé")
         case 50 : 
             print("Supprimer contact : Succès")
         case 51 : 
             print("Supprimer contact : Echec - contact non trouvé")
+        case 52 : 
+            print("Création contact : Echec - annuaire non trouvé pour suppression du contact")
         case 60 : 
             print("Ajouter droit utilisateur : Succès")
         case 61 : 
             print("Ajouter droit utilisateur : Echec - Utilisateur non trouvé")
+        case 62 : 
+            print("Ajouter droit utilisateur : Echec - ouverture du fichier pour l'ajout des droits impossible")
+        case 63 : 
+            print("Ajouter droit utilisateur : Echec - Utilisateur a déjà les droits")
+        case 65 : 
+            print("Supprimer droit utilisateur : Succès")
+        case 66 : 
+            print("Supprimer droit utilisateur : Echec - ouverture du fichier pour suppression des droits impossible")
+        case 67 : 
+            print("Supprimer droit utilisateur : Echec - l'utilisateur n'a pas les droits")
         case 70 : 
             print("Modifier mot de passe : Succès")
         case 71 : 
@@ -45,6 +71,12 @@ def analyseCodesRetours (code : int) :
             print("Créer utilisateur : Echec - utilisateur déjà existant")
         case 82 :
             print("Créer utilisateur : Echec - nombre d'utilisateur maximal existant déjà atteint")
+        case 84 :
+            print("Créer utilisateur : Echec - nom d'utilisateur vide")
+        case 85 :
+            print("Créer utilisateur : Echec - mot de passe vide")
+        case 86:
+            print("Créer utilisateur : Echec - erreur lors de l'encodement du message")
 #Modifier utilisateur n'existe pas
 #        case 90 :
 #            print("Modifier utilisateur : Succès")

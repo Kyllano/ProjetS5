@@ -10,7 +10,7 @@ currentUser = None
 
 
 #TODO GET CLIENT INFOS
-client = ClientServerClass.Client(2222, "192.168.43.20")
+client = ClientServerClass.Client(2222, "127.0.0.1")
 
 
 client.connect()
@@ -84,6 +84,7 @@ while cmd[0] != "logout" :
 
         #TODO afficher erreur POUR TOUTES LES FONCTIONS
         print("RETOUR :", reponse)
+        #retours.analyseCodesRetours(reponse)
 
     #J'aime pas avoir autant de if/else embriqué. Mais j'ai ni le choix ni le temps de rafctoriser ce code ci
     if len(cmd) == 2 and cmd[0] == "change" and cmd[1] == "pass" :
@@ -103,6 +104,7 @@ while cmd[0] != "logout" :
 
 
         print("RETOUR :", reponse)
+        #retours.analyseCodesRetours(reponse)
 
 
     if len(cmd) == 1 and cmd[0] == "whoami" :
@@ -170,6 +172,7 @@ while cmd[0] != "logout" :
             reponse = int.from_bytes(reponse, 'little')
 
             print("RETOUR :", reponse)
+            #retours.analyseCodesRetours(reponse)
 
 
     if len(cmd) == 3 and cmd[0] == "rm" and cmd[1] == "contact" :
@@ -180,6 +183,7 @@ while cmd[0] != "logout" :
             reponse = int.from_bytes(reponse, 'little')
 
             print("RETOUR :", reponse)
+            #retours.analyseCodesRetours(reponse)
 
         else :
             print("L'ID de contact fournit n'existe pas")

@@ -61,7 +61,7 @@ def importUsers(filename : str) :
         file = open(filename, 'r')
     except OSError:
         print("impossible d'ouvrir le fichier")
-        return -1
+        return 2
 
     content = file.read()
     content = content.split('\n')
@@ -77,10 +77,13 @@ def importUsers(filename : str) :
 
 
 #LA FONCTION A UTILISER POUR AJOUTER UN UTILISATEUR / UN ANNUAIRE
-#0  Succès
-#1 Nom invalide
-#2 Mot de passe invalide
-#3 User already exists
+#80  Succès
+#81 Nom invalide
+#82 Mot de passe invalide
+#83 User already exists
+#84 Username vide
+#85 mot de passe vide
+#86 Problème encodement
 def addUser(username : str, password : str, userList : list) :
     if username == "" :
         return 84
@@ -94,7 +97,7 @@ def addUser(username : str, password : str, userList : list) :
         #On essaye d'encoder le mot de passe depuis utf-8
         password.encode()
     except UnicodeError:
-        return 85
+        return 86
 
     for user in userList :
         if user.name == username :
@@ -107,9 +110,9 @@ def addUser(username : str, password : str, userList : list) :
     exportUsers(userList, "passwd.txt")
     return 80
 
-#0  Succès
-#1 username invalide
-#3 user not found
+#100  Succès
+#102 username invalide
+#101 user not found
 def removeUser(username : str, userList : list) :
     if username == "" :
         return 102
@@ -123,9 +126,9 @@ def removeUser(username : str, userList : list) :
 
     return 101
     
-#0  Succès
+#90  Succès
 #1 Nom invalide
-#2 Mot de passe invalide
+#93 Mot de passe invalide
 #3 user not found
 def changePassword(username : str, password : str, userList : list) :
 
