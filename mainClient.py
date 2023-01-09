@@ -2,6 +2,7 @@ import ClientServerClass
 import RSAUtils
 import annuaire
 import time
+import retours
 
 private, public = RSAUtils.createKeys()
 isAuthenticated = False
@@ -9,7 +10,7 @@ currentUser = None
 
 
 #TODO GET CLIENT INFOS
-client = ClientServerClass.Client(2222, "127.0.0.1")
+client = ClientServerClass.Client(2222, "192.168.43.20")
 
 
 client.connect()
