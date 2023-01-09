@@ -49,11 +49,11 @@ while (currentUser == None) :
         user = UserUtils.findUser(credentials[0], users)
         if (UserUtils.checkPasswordUser(credentials[1], user)) :
             currentUser = user
-            retour = 0
+            retour = 10
         else :
-            retour = 1
+            retour = 11
     else :
-        retour = 2
+        retour = 12
     serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
 
 print("utilisateur authentifié ! : ", retour)
@@ -85,7 +85,7 @@ while cmd[0] != "logout" :
             username = cmd[2]
             retour = UserUtils.removeUser(username, users)
         else :
-            retour = 4
+            retour = 103
         serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
         
 
@@ -98,8 +98,7 @@ while cmd[0] != "logout" :
                 nouveaumdp = cmd[3]
                 retour = UserUtils.changePassword(user.name, nouveaumdp, users)
             else :
-                print("ce 3 la?")
-                retour = 3
+                retour = 91
         else :
             user = currentUser
             mdp = cmd[4]
@@ -108,7 +107,7 @@ while cmd[0] != "logout" :
                 retour = UserUtils.changePassword(user.name, nouveaumdp, users)
                 currentUser = UserUtils.findUser(currentUser.name, users)
             else :
-                retour = 5
+                retour = 92
         serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
        
     #WHOAMI
@@ -128,16 +127,16 @@ while cmd[0] != "logout" :
         if (user != None) :
             if (currentUser.name == "root") :
                 currentUser = user
-                retour = 0
+                retour = 110
             else :
                 mdp = cmd[2]
                 if (UserUtils.checkPasswordUser(mdp, user)) :
                     currentUser = user
-                    retour = 0
+                    retour = 110
                 else :
-                    retour = 2
+                    retour = 111
         else :
-            retour = 3
+            retour = 112
         serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
     
     #SHOW USER
@@ -147,11 +146,11 @@ while cmd[0] != "logout" :
             ann = annuaire.importAnnuaire(user.name)
             #Si l'utilisateur a les droits
             if(currentUser.name in ann.userRights or currentUser.name == "root") :
-                retour = 0
+                retour = 20
             else :
-                retour = 1
+                retour = 21
         else :
-            retour = 2
+            retour = 22
         
         serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
 

@@ -112,16 +112,16 @@ def addUser(username : str, password : str, userList : list) :
 #3 user not found
 def removeUser(username : str, userList : list) :
     if username == "" :
-        return 1
+        return 102
 
     for i in range(0, len(userList)) :
         if userList[i].name == username:
             userList.pop(i)
             annuaire.supprimerAnnuaire(username)
             exportUsers(userList, "passwd.txt")
-            return 0
+            return 100
 
-    return 3
+    return 101
     
 #0  Succès
 #1 Nom invalide
@@ -130,16 +130,16 @@ def removeUser(username : str, userList : list) :
 def changePassword(username : str, password : str, userList : list) :
 
     if password == "" :
-        return 2
+        return 93
 
     err = removeUser(username, userList)
-    if (err != 0) :
+    if (err != 100) :
         return err
     err = addUser(username, password, userList)
-    if (err != 0) :
+    if (err != 80) :
         return err
 
-    return 0
+    return 90
 
 #Password est le mot de passe à vérifier et on le compare avec passwordHash et passwordSalt
 def checkPassword(password : str, passwordHash : str, passwordSalt : str) :

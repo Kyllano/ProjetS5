@@ -4,11 +4,15 @@ def analyseCodesRetours (code : int) :
         case 10 : 
             print("Authentification : Succès")
         case 11 : 
-            print("Authentification : Echec")
+            print("Authentification : Mot de passe incorrect")
+        case 12 : 
+            print("Authentification : Utilisateur inconnu")
         case 20 : 
-            print("Récupéreation annuaire : Succès")
+            print("Récupération annuaire : Succès")
         case 21 : 
-            print("Récupéreation annuaire  : Echec")
+            print("Récupération annuaire  : Echec - droits insuffisants")
+        case 22 :
+            print("Récupération annuaire  : Echec - utilisteur inconnu")
         case 30 : 
             print("Création contact : Succès")
         case 31 : 
@@ -41,18 +45,36 @@ def analyseCodesRetours (code : int) :
             print("Créer utilisateur : Echec - utilisateur déjà existant")
         case 82 :
             print("Créer utilisateur : Echec - nombre d'utilisateur maximal existant déjà atteint")
+#Modifier utilisateur n'existe pas
+#        case 90 :
+#            print("Modifier utilisateur : Succès")
+#        case 91 :
+#            print("Modifier utilisateur : Echec")
+#        case 92 :
+#            print("Modifier utilisateur : Nom d'utilisateur invalide")
+#Par contre changer mot de passe existe
         case 90 :
-            print("Modifier utilisateur : Succès")
+            print("Changer Mot de Passe : Succès")
         case 91 :
-            print("Modifier utilisateur : Echec")
+            print("Changer Mot de Passe : Echec - utilisateur non trouvé")
         case 92 :
-            print("Modifier utilisateur : Nom d'utilisateur invalide")
+            print("Changer Mot de Passe : Echec - ancien mot de passe invalide")
+        case 93 :
+            print("Changer Mot de Passe : Echec - mot de passe non valide")
         case 100 :
             print("Supprimer utilisateur : Succès")
         case 101 :
             print("Supprimer utilisateur : Echec - utilisateur non trouvé")
         case 102 :
             print("Supprimer utilisateur : Echec - nom d'utilisateur invalide")
+        case 103 :
+            print("Supprimer utilisateur : Droits insuffisant (non administrateur)")
+        case 110 :
+            print("Changement d'utilisateur : Succès")
+        case 111 :
+            print("Changement d'utilisateur : Echec - mot de passe invalide")
+        case 112 :
+            print("Changement d'utilisateur : Echec - utilisateur non trouvé")
         case _: #cas de code retour non présent ci dessus (ne devrait pas arriver mais sécurité)
             print("Erreur inconnu")
 
