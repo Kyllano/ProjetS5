@@ -56,11 +56,16 @@ while cmd[0] != "logout" :
     if len(cmd) == 1 and cmd[0] == "help" :
         print("Les commandes possibles sont les suivantes :")
         print(">>logout\nPermet de se deconnecter")
+        print(">>show [username]\nPermet d'afficher l'annuaire d'un utilisateur. Si [username] n'est pas renseigné, on utilisera l'utilisateur connecté")
+        print(">>list users\nPermet de connaitre l'identité des utilisateurs existants")
         print(">>whoami\nPermet de connaitre l'identité de l'utilisateur connecté")
         print(">>change pass\nPermet de changer le mot de passe de l'utilisateur connecté")
+        print(">>add right [username]\nPermet d'ajouter les droits de lecture de son annuaire à un utilisateur")
+        print(">>rm right [username]\nPermet de supprimer les droits de lecture de son annuaire à un utilisateur")
         print(">>su [nom d'utilisateur]\nPermet de changer de compte utilisateur")
         print(">>add user\nPermet à l'utilisateur root d'ajouter un utilisateur")
         print(">>rm user\nPermet à l'utilisateur root de supprimer un utilisateur")
+        
 
     if len(cmd) == 2 and cmd[0] == "add" and cmd[1] == "user" :
         username = input("Nom de l'utilisateur : ").replace(" ", "_")
@@ -71,7 +76,6 @@ while cmd[0] != "logout" :
         reponse = RSAUtils.decrypt(client.receiveAll(), private)
         reponse = int.from_bytes(reponse, 'little')
 
-        
         
 
     elif len(cmd) == 2 and cmd[0] == "rm" and cmd[1] == "user" :
@@ -86,7 +90,7 @@ while cmd[0] != "logout" :
        
         retours.analyseCodesRetours(reponse)
 
-    #J'aime pas avoir autant de if/else embriqué. Mais j'ai ni le choix ni le temps de rafctoriser ce code ci
+
     if len(cmd) == 2 and cmd[0] == "change" and cmd[1] == "pass" :
         if currentUser == "root" :
             username = input("Nom de l'utilisateur : ")
@@ -135,6 +139,7 @@ while cmd[0] != "logout" :
             currentUser = cmd[1]
         print(reponse)
 
+    #show
     if (len(cmd) == 1 or len(cmd) == 2) and cmd[0] == "show" :
         if len(cmd) == 2 :
             user = cmd[1]
@@ -144,9 +149,8 @@ while cmd[0] != "logout" :
         client.send(RSAUtils.encrypt(cmdserv.encode(), publicServer))
         reponse = RSAUtils.decrypt(client.receiveAll(), private)
         reponse = int.from_bytes(reponse, 'little')
-        print(reponse)
 
-        if (reponse == 0) :
+        if (reponse == 20) :
             nbContacts = RSAUtils.decrypt(client.receiveAll(), private)
             nbContacts = int.from_bytes(nbContacts, 'little')
             print("j'ai recu ", nbContacts)
@@ -154,6 +158,7 @@ while cmd[0] != "logout" :
             print("Annuaire de ", user)
             for i in range(0, nbContacts) :
                 recu = RSAUtils.decrypt(client.receive256(), private).decode()
+                #Efectuer affichage propre
                 print(recu)
     
     if len(cmd) == 2 and cmd[0] == "add" and cmd[1] == "contact" :
@@ -171,7 +176,6 @@ while cmd[0] != "logout" :
             reponse = RSAUtils.decrypt(client.receiveAll(), private)
             reponse = int.from_bytes(reponse, 'little')
 
-        
             retours.analyseCodesRetours(reponse)
 
 
@@ -182,18 +186,25 @@ while cmd[0] != "logout" :
             reponse = RSAUtils.decrypt(client.receiveAll(), private)
             reponse = int.from_bytes(reponse, 'little')
 
-        
             retours.analyseCodesRetours(reponse)
-
         else :
             print("L'ID de contact fournit n'existe pas")
         
+    if len(cmd) == 3 and cmd[0] == "add" and cmd[1] == "right" :
+        cmdserv = "add right " + cmd[2]
+        client.send(RSAUtils.encrypt(cmdserv.encode(), publicServer))
+        reponse = RSAUtils.decrypt(client.receiveAll(), private)
+        reponse = int.from_bytes(reponse, 'little')
+        
+        retours.analyseCodesRetours(reponse)
 
-
-            
-
-
-
+    if len(cmd) == 3 and cmd[0] == "rm" and cmd[1] == "right" :
+        cmdserv = "rm right " + cmd[2]
+        client.send(RSAUtils.encrypt(cmdserv.encode(), publicServer))
+        reponse = RSAUtils.decrypt(client.receiveAll(), private)
+        reponse = int.from_bytes(reponse, 'little')
+        
+        retours.analyseCodesRetours(reponse)
 
 
 

@@ -25,25 +25,27 @@ if (isinstance(addr, int)) :
     print("Veuillez redémarrer le serveur")
     exit(-1)
 
-print("Synchronisation ...")
+
 #time.sleep(1)
-print("utilisateur connecté")
+print("Connexion entrante")
 #Connexion initiée.
 
+
+print("Echange de cle RSA")
 #Securisation connexion avec RSA
-print("Envoie de la clé publique")
+#print("Envoie de la clé publique")
 serveur.send(RSAUtils.publicKeyToPublicBytes(public))
 #time.sleep(1)
-print("Reception de la clé ...")
+#print("Reception de la clé ...")
 publicClient = serveur.receiveAll()
 publicClient = RSAUtils.publicBytesToPublicKey(publicClient)
-print("Clé du client reçue")
+#print("Clé du client reçue")
 #Echange de clé effectué
 
 #Authentification
-print("\n Authentication !")
+print("\nAuthentification : ")
 retour = None
-while (currentUser == None) :
+while (currentUser == None or retour != 10) :
     credentials = RSAUtils.decrypt(serveur.receiveAll(), private).decode()
     credentials = credentials.split(" ")
     if (UserUtils.findUser(credentials[0], users)) :
@@ -155,20 +157,17 @@ while cmd[0] != "logout" :
         
         serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
 
-        if retour == 0 :
+        if retour == 20 :
             nbContact = len(ann.contacts)
             print("NbContact : " , nbContact)
             time.sleep(1)
             serveur.send(RSAUtils.encrypt(nbContact.to_bytes(5, 'little'), publicClient))
 
-            print("CLIENT : ", publicClient.key_size)
+            print("Envoie de l'annuaire de", user.name)
             for c in ann.contacts :
                 tosend = c[0]+ " " + c[1]+ " " + c[2]+ " " +c[3]+ " " + c[4]+ " " + c[5]
-                print("j'envoie contacte : ", tosend)
-                print("de longueur : ", len(tosend))
                 time.sleep(0)
                 mess = RSAUtils.encrypt(tosend.encode(), publicClient)
-                #print("MESS : \n", mess)
                 serveur.send(mess)
 
     #ADD CONTACT NOM PRENOM MAIL ADDRESSE PORTABLE
@@ -180,6 +179,28 @@ while cmd[0] != "logout" :
     if len(cmd) == 3 and cmd[0] == "rm" and cmd[1] == "contact" :
         retour = annuaire.removeContact(currentUser.name, int(cmd[2]))
         serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
+
+    #ADD RIGHT USERNAME
+    if len(cmd) == 3 and cmd[0] == "add" and cmd[1] == "right" :
+        user = UserUtils.findUser(cmd[2], users)
+        if (user != None) :
+            retour = annuaire.addRightsAnnuaires(currentUser.name, cmd[2])
+        else :
+            retour = 61
+
+        serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
+
+
+    #RM RIGHT USERNAME
+    if len(cmd) == 3 and cmd[0] == "rm" and cmd[1] == "right" :
+        user = UserUtils.findUser(cmd[2], users)
+        if (user != None) :
+            retour = annuaire.removeRightsAnnuaires(currentUser.name, cmd[2])
+        else :
+            retour = 68
+
+        serveur.send(RSAUtils.encrypt(retour.to_bytes(5, 'little'), publicClient))
+        
 
     #LOGOUT
     if len(cmd) == 1 and cmd[0] == "logout" :

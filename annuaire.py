@@ -1,6 +1,4 @@
-import UserUtils
 import os
-
 
 
 class Annuaire :
@@ -107,7 +105,6 @@ def removeRightsAnnuaires(nomAnnuaire : str, username : str) :
 		return 67
 	
 	rights.remove(username)
-	print(rights)
 	file = open("./annuaires/" + nomAnnuaire + ".txt", 'w')
 
 	file.write(rights[0])
@@ -117,7 +114,7 @@ def removeRightsAnnuaires(nomAnnuaire : str, username : str) :
 	for c in content[1:] :
 		file.write("\n" + c)
 	file.close()
-	return 60
+	return 65
 	
 #ici username donne le nom de l'annuaire  dans lequel on ajoute le contacte
 #30 succes

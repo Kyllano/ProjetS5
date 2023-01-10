@@ -56,7 +56,9 @@ def analyseCodesRetours (code : int) :
         case 66 : 
             print("Supprimer droit utilisateur : Echec - ouverture du fichier pour suppression des droits impossible")
         case 67 : 
-            print("Supprimer droit utilisateur : Echec - l'utilisateur n'a pas les droits")
+            print("Supprimer droit utilisateur : Echec - l'utilisateur donné n'a pas les droits")
+        case 67 : 
+            print("Supprimer droit utilisateur : Echec - l'utilisateur donné n'existe pas les droits")
         case 70 : 
             print("Modifier mot de passe : Succès")
         case 71 : 
