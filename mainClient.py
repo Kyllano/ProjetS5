@@ -9,18 +9,24 @@ isAuthenticated = False
 currentUser = None
 
 
-#TODO GET CLIENT INFOS
-client = ClientServerClass.Client(2222, "127.0.0.1")
-
+port = input("Veuillez indiquer un port le client se connectera : ")
+try :
+    int(port)
+except ValueError:
+    print("numéro de port invalide, veuillez redémarrer le client")
+    exit(-1)
+client = ClientServerClass.Client(port, "127.0.0.1")
 
 client.connect()
-print("client connecté !")
-print("Reception de la clé...")
+print("Connexion effectuée ! ")
+print("Echange de clé")
+#print("client connecté !")
+#print("Reception de la clé...")
 publicServer = client.receiveAll()
 publicServer = RSAUtils.publicBytesToPublicKey(publicServer)
-print("Clé du server reçue")
+#print("Clé du server reçue")
 #time.sleep(1)
-print("envoie clé client")
+#print("envoie clé client")
 client.send(RSAUtils.publicKeyToPublicBytes(public))
 
 
