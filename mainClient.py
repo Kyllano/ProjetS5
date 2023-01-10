@@ -76,6 +76,8 @@ while cmd[0] != "logout" :
         reponse = RSAUtils.decrypt(client.receiveAll(), private)
         reponse = int.from_bytes(reponse, 'little')
 
+        retours.analyseCodesRetours(reponse)
+
         
 
     elif len(cmd) == 2 and cmd[0] == "rm" and cmd[1] == "user" :
@@ -85,8 +87,6 @@ while cmd[0] != "logout" :
         client.send(RSAUtils.encrypt(cmdserv.encode(), publicServer))
         reponse = RSAUtils.decrypt(client.receiveAll(), private)
         reponse = int.from_bytes(reponse, 'little')
-
-        #TODO afficher erreur POUR TOUTES LES FONCTIONS
        
         retours.analyseCodesRetours(reponse)
 
@@ -105,8 +105,6 @@ while cmd[0] != "logout" :
         client.send(RSAUtils.encrypt(cmdserv.encode(), publicServer))
         reponse = RSAUtils.decrypt(client.receiveAll(), private)
         reponse = int.from_bytes(reponse, 'little')
-
-
        
         retours.analyseCodesRetours(reponse)
 
@@ -137,7 +135,8 @@ while cmd[0] != "logout" :
         reponse = int.from_bytes(reponse, 'little')
         if (reponse == 0) :
             currentUser = cmd[1]
-        print(reponse)
+
+        retours.analyseCodesRetours(reponse)
 
     #show
     if (len(cmd) == 1 or len(cmd) == 2) and cmd[0] == "show" :
@@ -153,14 +152,17 @@ while cmd[0] != "logout" :
         if (reponse == 20) :
             nbContacts = RSAUtils.decrypt(client.receiveAll(), private)
             nbContacts = int.from_bytes(nbContacts, 'little')
-            print("j'ai recu ", nbContacts)
+            #print("j'ai recu ", nbContacts)
 
-            print("Annuaire de ", user)
+            print("Annuaire de ", user, ":")
             for i in range(0, nbContacts) :
                 recu = RSAUtils.decrypt(client.receive256(), private).decode()
                 #Efectuer affichage propre
                 print(recu)
+        else :
+            retours.analyseCodesRetours(reponse)
     
+
     if len(cmd) == 2 and cmd[0] == "add" and cmd[1] == "contact" :
         nom = input("Nom : ").replace(" ", "_")
         prenom = input("Prenom : ").replace(" ", "_")
