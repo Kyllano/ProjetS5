@@ -1,6 +1,8 @@
 from cryptography.hazmat.primitives import hashes
 import random
 import string
+import annuaire
+import os
 
 
 class User :
@@ -41,9 +43,9 @@ def exportUsers(userList : list, filename : str) :
         file = open(filename, 'w')
     except OSError:
         print("impossible d'ouvrir le fichier")
-        return -1
+        return 1
     
-    nbUser=0
+    nbUser=1
     for user in userList :
         if isinstance(user, User) :
             nbUser += 1
@@ -59,7 +61,7 @@ def importUsers(filename : str) :
         file = open(filename, 'r')
     except OSError:
         print("impossible d'ouvrir le fichier")
-        return -1
+        return 2
 
     content = file.read()
     content = content.split('\n')
@@ -73,13 +75,21 @@ def importUsers(filename : str) :
     file.close()
     return users
 
-#0  Succès
-#-1 Nom invalide
-#-2 Mot de passe invalide
-#-3 User already exists
+
+#LA FONCTION A UTILISER POUR AJOUTER UN UTILISATEUR / UN ANNUAIRE
+#80  Succès
+#81 Nom invalide
+#82 Mot de passe invalide
+#83 User already exists
+#84 Username vide
+#85 mot de passe vide
+#86 Problème encodement
 def addUser(username : str, password : str, userList : list) :
     if username == "" :
-        return -1
+        return 84
+    
+    if password == "" :
+        return 85
 
     #Je remet un try except ici. Ceci est redondant, et on pourrais utiliser un raise en ligne 26 et faire un try except de User() ici
     #Malheureusement, je ne sais pas encore bien gérer les raise Exception()
@@ -87,46 +97,52 @@ def addUser(username : str, password : str, userList : list) :
         #On essaye d'encoder le mot de passe depuis utf-8
         password.encode()
     except UnicodeError:
-        return -2
+        return 86
 
     for user in userList :
         if user.name == username :
-            return -3
+            return 81
     
     newUser = User(username, password, False)
     userList.append(newUser)
+    annuaire.creerAnnuaire(username)
+    
     exportUsers(userList, "passwd.txt")
-    return 0
+    return 80
 
-#0  Succès
-#-1 username invalide
-#-3 user not found
+#100  Succès
+#102 username invalide
+#101 user not found
 def removeUser(username : str, userList : list) :
     if username == "" :
-        return -1
+        return 102
 
     for i in range(0, len(userList)) :
         if userList[i].name == username:
             userList.pop(i)
+            annuaire.supprimerAnnuaire(username)
             exportUsers(userList, "passwd.txt")
-            return 0
+            return 100
 
-    return -3
+    return 101
     
-#0  Succès
-#-1 Nom invalide
-#-2 Mot de passe invalide
-#-3 user not found
+#90  Succès
+#1 Nom invalide
+#93 Mot de passe invalide
+#3 user not found
 def changePassword(username : str, password : str, userList : list) :
 
+    if password == "" :
+        return 93
+
     err = removeUser(username, userList)
-    if (err != 0) :
+    if (err != 100) :
         return err
     err = addUser(username, password, userList)
-    if (err != 0) :
+    if (err != 80) :
         return err
 
-    return 0
+    return 90
 
 #Password est le mot de passe à vérifier et on le compare avec passwordHash et passwordSalt
 def checkPassword(password : str, passwordHash : str, passwordSalt : str) :

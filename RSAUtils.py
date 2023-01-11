@@ -33,3 +33,10 @@ def publicBytesToPublicKey(publicBytes : bytes) -> rsa.RSAPublicKey :
     derData = base64.b64decode(keyData)
     publicKey = serialization.load_der_public_key(derData, default_backend())
     return publicKey
+
+def isdigit(num : str) :
+    try:
+        int(num)
+        return True
+    except ValueError:
+        return False
