@@ -1,7 +1,6 @@
 import ClientServerClass
 import RSAUtils
-import annuaire
-import time
+import ClientServerClassUtils
 import retours
 
 private, public = RSAUtils.createKeys()
@@ -10,12 +9,17 @@ currentUser = None
 
 
 port = input("Veuillez indiquer un port le client se connectera : ")
+addresse = input("Veuillez indiquer l'adresse à laquelle le client se connectera : ")
 try :
     int(port)
 except ValueError:
     print("numéro de port invalide, veuillez redémarrer le client")
     exit(-1)
-client = ClientServerClass.Client(port, "127.0.0.1")
+if (not ClientServerClassUtils.checkValidIpAddress(addresse) ) :
+    print("Veuillez indiquer une adresse IPv4 valide")
+    exit(-1)
+client = ClientServerClass.Client(int(port), "127.0.0.1")
+
 
 client.connect()
 print("Connexion effectuée ! ")
@@ -139,7 +143,7 @@ while cmd[0] != "logout" :
         client.send(RSAUtils.encrypt(cmdserv.encode(), publicServer))
         reponse = RSAUtils.decrypt(client.receiveAll(), private)
         reponse = int.from_bytes(reponse, 'little')
-        if (reponse == 0) :
+        if (reponse == 110) :
             currentUser = cmd[1]
 
         retours.analyseCodesRetours(reponse)

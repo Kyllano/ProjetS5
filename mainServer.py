@@ -13,7 +13,7 @@ currentUser = None
 private, public = RSAUtils.createKeys()
 
 #Création de la connexion
-port = 2222 #input("Veuillez indiquer un port sur lequel le client devra se connecter : ")
+port = input("Veuillez indiquer un port sur lequel le client devra se connecter : ")
 try :
     int(port)
 except ValueError:
